@@ -26,7 +26,40 @@ The goal was to make Acrobat unnecessary for the PDF work I actually do.**
 > What this project replaces is the **Adobe-centered document workflow** I was actually using.
 
 ---
+## 📑 Table of Contents
 
+- [Where This Started](#where-this-started)
+- [The Real Problem Wasn't Acrobat](#real-problem-wasnt-acrobat)
+- [What Actually Needed to Be Replaced](#what-needed-replacing)
+- [The Resulting Stack](#resulting-stack)
+- [Replacing Everyday Acrobat Tasks with Stirling PDF](#replacing-acrobat-tasks)
+- [Stirling Is a Toolbench, Not a Repository](#stirling-toolbench-not-repository)
+- [Replacing Adobe Scan](#replacing-adobe-scan)
+- [Why the Scanner Does Not Connect Directly to Unraid](#scanner-direct-unraid)
+- [Replacing the “Download Email Attachment” Routine](#replacing-email-download-routine)
+- [A Fallback Intake Path](#fallback-intake-path)
+- [Duplicate Protection](#duplicate-protection)
+- [Why Google Drive Is Still in the Architecture](#google-drive-architecture)
+- [“My Files Never Leave the House” — With an Important Qualification](#files-never-leave-house)
+- [Pulling Documents into Unraid with rclone](#pulling-documents-with-rclone)
+- [Why I Use `rclone copy`, Not `rclone sync`](#rclone-copy-not-sync)
+- [One-Minute Intake](#one-minute-intake)
+- [Windows Still Feels Like Windows](#windows-feels-like-windows)
+- [Security Model](#security-model)
+- [One Unexpected Apps Script Lesson](#apps-script-lesson)
+- [This Is Not Acrobat Pro](#this-is-not-acrobat-pro)
+- [Adobe-Centered vs. Modular Workflow](#adobe-centered-vs-modular)
+- [A More Unix-Like Approach](#more-unix-like-approach)
+- [Failure Becomes Easier to Understand](#failure-easier-to-understand)
+- [Source Documents Stay Independent](#source-documents-stay-independent)
+- [What I Am Not Trying to Build](#what-i-am-not-trying-to-build)
+- [What the Project Replaces for Me](#what-the-project-replaces-for-me)
+- [The Result](#the-result)
+- [Project Documentation](#project-documentation)
+- [Inspiration](#inspiration)
+
+---
+<a id="where-this-started"></a>
 # 💡 Where This Started
 
 This project began after I read Tashreef Shareef's August 2026 MakeUseOf article:
@@ -53,6 +86,7 @@ And then the project became much more interesting.
 
 ---
 
+<a id="real-problem-wasnt-acrobat"></a>
 # 🎯 The Real Problem Wasn't Acrobat
 
 Installing Stirling solved the **PDF manipulation** problem.
@@ -87,6 +121,7 @@ That changed the scope of the project.
 
 ---
 
+<a id="what-needed-replacing"></a>
 # 🧩 What Actually Needed to Be Replaced
 
 When I reduced the Adobe workflow to the functions I actually use, the list was much more manageable.
@@ -119,6 +154,7 @@ And that distinction became the foundation of the project.
 
 ---
 
+<a id="resulting-stack"></a>
 # 🔄 The Resulting Stack
 
 Instead of finding one application to replace Adobe, I ended up using several tools with narrow responsibilities.
@@ -196,6 +232,7 @@ The important architectural choice is that **no single application owns the enti
 
 ---
 
+<a id="replacing-acrobat-tasks"></a>
 # 📄 Replacing Everyday Acrobat Tasks with Stirling PDF
 
 Stirling PDF became the PDF workbench.
@@ -245,6 +282,7 @@ That workflow no longer requires Acrobat.
 
 ---
 
+<a id="stirling-toolbench-not-repository"></a>
 # 🛠️ Stirling Is a Toolbench, Not a Repository
 
 This became one of the most important design decisions in the entire project.
@@ -286,9 +324,12 @@ And the source PDF does not need to be automatically rewritten simply because it
 
 ---
 
+<a id="replacing-adobe-scan"></a>
 # 📱 Replacing Adobe Scan
 
 Once Stirling was working, Adobe Scan became the next obvious dependency.
+
+Adobe Scan was the harder part to replace. It had been one of my go-to productivity apps for years, and it was deeply embedded in the way I captured paper documents. Finding a credible replacement was not optional; it was a critical requirement for the entire stack. If the mobile scanning experience became slower, less reliable, or more cumbersome, the broader Acrobat replacement project would have failed in practice.
 
 For that role I chose **OSS Document Scanner**.
 
@@ -307,6 +348,7 @@ PDF generation
      ↓
 Google Drive upload
 ```
+At first, OSS Document Scanner looked like it might be just another mediocre scanner app. The default results did not immediately convince me. But once I spent time in the preferences and tuned the image-processing, OCR, and PDF settings, the quality improved substantially. With the right configuration, it was able to produce clean, high-quality document scans that, for my use, could rival what I had been getting from Adobe Scan.
 
 The configuration I settled on favors clean business documents rather than photographic reproduction.
 
@@ -338,8 +380,10 @@ The configuration I settled on favors clean business documents rather than photo
 | Scaling | Full |
 | PDF output | Color |
 | Pages per sheet | 1 |
-| Margin | 10 |
+| Margin | 0 or 1 |*
 | Password | None |
+
+* I initially used a margin setting of 10, but I found it too generous for ordinary document scans. I expect to settle on 0 or 1, which better preserves the usable page area without adding unnecessary whitespace.
 
 The generated PDF includes a searchable OCR text layer.
 
@@ -347,6 +391,7 @@ That means a paper document can become a searchable PDF **before it ever reaches
 
 ---
 
+<a id="scanner-direct-unraid"></a>
 # 📲 Why the Scanner Does Not Connect Directly to Unraid
 
 My first instinct was to ask whether OSS Document Scanner could write directly to the Unraid SMB share.
@@ -380,6 +425,7 @@ The phone never needs direct access to Unraid.
 
 ---
 
+<a id="replacing-email-download-routine"></a>
 # 📥 Replacing the “Download Email Attachment” Routine
 
 Email attachments turned out to be one of the more interesting parts of the project.
@@ -428,6 +474,7 @@ The message is only marked processed **after the PDF has successfully been writt
 
 ---
 
+<a id="fallback-intake-path"></a>
 # ⏱️ A Fallback Intake Path
 
 There is also a second Gmail workflow.
@@ -461,6 +508,7 @@ So the system supports both:
 
 ---
 
+<a id="duplicate-protection"></a>
 # 🔁 Duplicate Protection
 
 Both Gmail workflows share the same deduplication mechanism.
@@ -483,6 +531,7 @@ It is a small implementation detail, but it makes the intake system substantiall
 
 ---
 
+<a id="google-drive-architecture"></a>
 # ☁️ Why Google Drive Is Still in the Architecture
 
 At first glance, using Google Drive in a self-hosted document project may seem contradictory.
@@ -513,6 +562,7 @@ Instead, it initiates the connection and retrieves new documents.
 
 ---
 
+<a id="files-never-leave-house"></a>
 # 🔐 “My Files Never Leave the House” — With an Important Qualification
 
 The MakeUseOf article that inspired this project emphasizes the advantage of keeping PDF processing local.
@@ -539,6 +589,7 @@ Cloud services are used intentionally and for specific transport functions.
 
 ---
 
+<a id="pulling-documents-with-rclone"></a>
 # 🔄 Pulling Documents into Unraid with rclone
 
 Unraid retrieves both Google Drive intake folders using `rclone`.
@@ -571,6 +622,7 @@ This follows a simple least-privilege principle.
 
 ---
 
+<a id="rclone-copy-not-sync"></a>
 # 🗄️ Why I Use `rclone copy`, Not `rclone sync`
 
 This distinction is critical.
@@ -611,6 +663,7 @@ Using `copy` instead of `sync` makes the local archive independent from later cl
 
 ---
 
+<a id="one-minute-intake"></a>
 # ⚡ One-Minute Intake
 
 Both rclone jobs run every minute.
@@ -655,6 +708,7 @@ A technically elegant system that adds friction to everyday office work will eve
 
 ---
 
+<a id="windows-feels-like-windows"></a>
 # 💻 Windows Still Feels Like Windows
 
 The local archive is exposed through the existing Unraid `Documents` SMB share.
@@ -679,6 +733,7 @@ That is the desired result.
 
 ---
 
+<a id="security-model"></a>
 # 🔒 Security Model
 
 The project is not built around the claim that every component is perfectly private.
@@ -725,6 +780,7 @@ Not authoritative archive
 
 ---
 
+<a id="apps-script-lesson"></a>
 # 🧠 One Unexpected Apps Script Lesson
 
 During development I encountered an attachment-handling issue that is worth documenting.
@@ -763,6 +819,7 @@ It was a useful reminder that the representation returned by an Apps Script adva
 
 ---
 
+<a id="this-is-not-acrobat-pro"></a>
 # ⚖️ This Is Not Acrobat Pro
 
 There are still areas where Acrobat Pro is substantially more mature.
@@ -799,6 +856,7 @@ But they do not materially affect the workflow I was trying to replace.
 
 ---
 
+<a id="adobe-centered-vs-modular"></a>
 # 🆚 Adobe-Centered vs. Modular Workflow
 
 The conceptual shift looks like this:
@@ -851,6 +909,7 @@ And each component can be replaced independently.
 
 ---
 
+<a id="more-unix-like-approach"></a>
 # 🧱 A More Unix-Like Approach
 
 The project ultimately became an exercise in decomposition.
@@ -891,6 +950,7 @@ Each component does one job.
 
 ---
 
+<a id="failure-easier-to-understand"></a>
 # 🛡️ Failure Becomes Easier to Understand
 
 That modularity also makes troubleshooting much easier.
@@ -929,6 +989,7 @@ That separation has operational value beyond the original goal of replacing Acro
 
 ---
 
+<a id="source-documents-stay-independent"></a>
 # 📁 Source Documents Stay Independent
 
 Another benefit of this design is that the original intake PDF exists independently of the application used to manipulate it.
@@ -955,6 +1016,7 @@ That is exactly how I want a document system to behave.
 
 ---
 
+<a id="what-i-am-not-trying-to-build"></a>
 # 🚧 What I Am Not Trying to Build
 
 This project is **not** intended to become:
@@ -973,6 +1035,7 @@ Trying to force every document-related function into Stirling would make the arc
 
 ---
 
+<a id="what-the-project-replaces-for-me"></a>
 # ✅ What the Project Replaces for Me
 
 For my actual daily workflow, the following Adobe-dependent tasks no longer require Acrobat or Adobe Scan:
@@ -1024,6 +1087,7 @@ That was the objective.
 
 ---
 
+<a id="the-result"></a>
 # 🏁 The Result
 
 The MakeUseOf article introduced me to Stirling PDF as a self-hosted alternative to everyday online and Acrobat-based PDF tools.
@@ -1076,6 +1140,7 @@ That turned out to be the more interesting project.
 
 ---
 
+<a id="project-documentation"></a>
 # 📚 Project Documentation
 
 Additional implementation details are available in this repository:
@@ -1091,6 +1156,7 @@ Additional implementation details are available in this repository:
 
 ---
 
+<a id="inspiration"></a>
 ## Inspiration
 
 This project was initially inspired by:
