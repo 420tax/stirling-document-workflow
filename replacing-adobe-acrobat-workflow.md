@@ -1080,14 +1080,14 @@ That turned out to be the more interesting project.
 
 Additional implementation details are available in this repository:
 
-- [`../README.md`](../README.md) — overall project documentation
-- [`architecture.md`](architecture.md) — architecture and trust boundaries
-- [`oss-document-scanner.md`](oss-document-scanner.md) — OSS Document Scanner configuration
-- [`recovery.md`](recovery.md) — recovery and troubleshooting guide
-- [`../apps-script/Code.gs`](../apps-script/Code.gs) — Gmail intake Apps Script
-- [`../apps-script/appsscript.json`](../apps-script/appsscript.json) — Apps Script manifest
-- [`../unraid/pull-email-pdf-intake.sh`](../unraid/pull-email-pdf-intake.sh) — Gmail intake rclone job
-- [`../unraid/pull-oss-scanner.sh`](../unraid/pull-oss-scanner.sh) — scanner rclone job
+- [`README.md`](README.md) — overall project documentation
+- [`docs/architecture.md`](docs/architecture.md) — architecture and trust boundaries
+- [`docs/oss-document-scanner.md`](docs/oss-document-scanner.md) — OSS Document Scanner configuration
+- [`docs/recovery.md`](docs/recovery.md) — recovery and troubleshooting guide
+- [`apps-script/Code.gs`](apps-script/Code.gs) — Gmail intake Apps Script
+- [`apps-script/appsscript.json`](apps-script/appsscript.json) — Apps Script manifest
+- [`unraid/pull-email-pdf-intake.sh`](unraid/pull-email-pdf-intake.sh) — Gmail intake rclone job
+- [`unraid/pull-oss-scanner.sh`](unraid/pull-oss-scanner.sh) — scanner rclone job
 
 ---
 
